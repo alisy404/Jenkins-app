@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/your-username/jenkins-terraform-docker.git'
+                git 'https://github.com/alisy404/Jenkins-app.git'
             }
         }
 
