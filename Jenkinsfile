@@ -11,7 +11,7 @@ pipeline {
                 git 'https://github.com/alisy404/Jenkins-app.git'
             }
         }
-
+ 
         stage('Terraform Init & Apply') {
             steps {
                 sh '''
