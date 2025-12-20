@@ -21,7 +21,7 @@ pipeline {
                 '''
             }
         }
-
+  
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t jenkins-flask-app ./app'
