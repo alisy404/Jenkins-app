@@ -6,3 +6,5 @@ crash.log
 override.tf
 override.tf.json
 *_override.tf
+
+.terraform.tfstate.lock.info

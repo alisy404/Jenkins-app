@@ -13,13 +13,18 @@ pipeline {
         // }
         stage('Terraform Init & Apply') {
             steps {
+                withCredentials([
+                [$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']
+                ]) {
                 sh '''
-                  cd terraform
-                  terraform init
-                  terraform apply -auto-approve
+                    cd terraform
+                    terraform init
+                    terraform apply -auto-approve
                 '''
+                }
             }
         }
+
   
         stage('Build Docker Image') {
             steps {
