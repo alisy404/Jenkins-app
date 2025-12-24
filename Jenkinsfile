@@ -48,6 +48,8 @@ pipeline {
 
                         cd /home/ec2-user
                         rm -rf app
+                        sudo yum install -y git
+
                         git clone https://github.com/alisy404/Jenkins-app.git app
                         cd app/app
 
