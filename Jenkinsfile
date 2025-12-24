@@ -43,11 +43,12 @@ pipeline {
                     sudo systemctl start docker
                     sudo usermod -aG docker ec2-user
 
-                    docker stop flask || true
-                    docker rm flask || true
+                    sudo docker stop flask || true
+                    sudo docker rm flask || true
 
-                    docker build -t flask-app /home/ec2-user
-                    docker run -d -p 5000:5000 --name flask flask-app
+                    sudo docker build -t flask-app /home/ec2-user
+                    sudo docker run -d -p 5000:5000 --name flask flask-app
+
                     '
                 """
                 }
