@@ -39,7 +39,10 @@ pipeline {
                     EC2_IP=\$(terraform -chdir=terraform output -raw ec2_public_ip)
 
                     ssh -o StrictHostKeyChecking=no ec2-user@\${EC2_IP} '
+
                     sudo yum install -y docker || true
+                    sudo systemctl enable docker
+
                     sudo systemctl start docker
                     sudo usermod -aG docker ec2-user
 
