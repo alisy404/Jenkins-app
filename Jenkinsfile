@@ -54,7 +54,24 @@ pipeline {
             }
         }
 
-        stage('Terraform Destroy (Manual Approval)') {
+
+
+
+
+        stage('Health Check') {
+            steps {
+                sh '''
+                EC2_IP=$(terraform -chdir=terraform output -raw ec2_public_ip)
+                curl --fail http://$EC2_IP:5000/health
+                '''
+            }
+        }
+
+
+
+
+
+                stage('Terraform Destroy (Manual Approval)') {
             when {
                 expression { currentBuild.currentResult == 'SUCCESS' }
             }
@@ -73,17 +90,6 @@ pipeline {
                         terraform destroy -auto-approve
                     '''
                 }
-            }
-        }
-
-
-
-        stage('Health Check') {
-            steps {
-                sh '''
-                EC2_IP=$(terraform -chdir=terraform output -raw ec2_public_ip)
-                curl --fail http://$EC2_IP:5000/health
-                '''
             }
         }
     }
