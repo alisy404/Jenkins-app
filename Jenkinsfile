@@ -34,7 +34,7 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                sshagent(credentials: ['ec2-ssh']) {
+                sshagent(credentials: ['ec2-key']) {
                 sh """
                     EC2_IP=\$(terraform -chdir=terraform output -raw ec2_public_ip)
 
