@@ -54,6 +54,28 @@ pipeline {
             }
         }
 
+        stage('Terraform Destroy (Manual Approval)') {
+            when {
+                expression { currentBuild.currentResult == 'SUCCESS' }
+            }
+            steps {
+                input message: 'Do you really want to DESTROY all AWS infrastructure?',
+                    ok: 'Yes, destroy it'
+                
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-creds',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
+                    sh '''
+                        cd terraform
+                        terraform destroy -auto-approve
+                    '''
+                }
+            }
+        }
+
 
 
         stage('Health Check') {
