@@ -33,18 +33,27 @@ pipeline {
         }
 
         stage('Deploy to EC2') {
-        steps {
-            sshagent(credentials: ['ec2-key']) {
-            sh '''
-                EC2_IP=$(terraform -chdir=terraform output -raw ec2_public_ip)
+            steps {
+                sshagent(credentials: ['ec2-ssh']) {
+                sh """
+                    EC2_IP=\$(terraform -chdir=terraform output -raw ec2_public_ip)
 
-                scp -o StrictHostKeyChecking=no \
-                app/Dockerfile app/app.py app/requirements.txt \
-                ec2-user@$EC2_IP:/home/ec2-user/
-            '''
+                    ssh -o StrictHostKeyChecking=no ec2-user@\${EC2_IP} '
+                    sudo yum install -y docker || true
+                    sudo systemctl start docker
+                    sudo usermod -aG docker ec2-user
+
+                    docker stop flask || true
+                    docker rm flask || true
+
+                    docker build -t flask-app /home/ec2-user
+                    docker run -d -p 5000:5000 --name flask flask-app
+                    '
+                """
+                }
             }
         }
-        }
+
 
 
         stage('Health Check') {
