@@ -1,3 +1,3 @@
 region        = "us-east-1"
 instance_type = "t2.micro"
-key_name      = "jenkins-key"
+key_name      = "jenkins-key1"
