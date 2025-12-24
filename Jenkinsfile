@@ -35,28 +35,30 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 sshagent(credentials: ['ec2-key']) {
-                sh """
+                    sh """
                     EC2_IP=\$(terraform -chdir=terraform output -raw ec2_public_ip)
 
                     ssh -o StrictHostKeyChecking=no ec2-user@\${EC2_IP} '
+                        sudo yum install -y docker || true
+                        sudo systemctl enable docker
+                        sudo systemctl start docker
 
-                    sudo yum install -y docker || true
-                    sudo systemctl enable docker
+                        sudo docker stop flask || true
+                        sudo docker rm flask || true
 
-                    sudo systemctl start docker
-                    sudo usermod -aG docker ec2-user
+                        cd /home/ec2-user
+                        rm -rf app
+                        git clone https://github.com/alisy404/Jenkins-app.git app
+                        cd app/app
 
-                    sudo docker stop flask || true
-                    sudo docker rm flask || true
-
-                    sudo docker build -t flask-app /home/ec2-user
-                    sudo docker run -d -p 5000:5000 --name flask flask-app
-
+                        sudo docker build -t flask-app .
+                        sudo docker run -d -p 5000:5000 --name flask flask-app
                     '
-                """
+                    """
                 }
             }
         }
+
 
 
 
