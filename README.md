@@ -1,5 +1,5 @@
 ## 🧩 Overview
-
+  
 **JENK-APP** is a production-style, single-click CI/CD project that demonstrates how modern DevOps teams build, deploy, validate, and clean up applications automatically.
 
 With a single Jenkins pipeline run, this project performs the complete application lifecycle without manual intervention.
